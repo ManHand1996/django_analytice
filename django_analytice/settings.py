@@ -124,6 +124,11 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# maxmind.com account and license key
+MAXMIND_ACCOUNT = 620139
+MAXMIND_LICENSE = 'hj9vWU89SrurhZYA'
+
 # maxmind geoip2
 # 620139
 # SkMqbajET3wL
