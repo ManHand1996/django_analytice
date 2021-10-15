@@ -30,11 +30,14 @@ class SiteVisitor(models.Model):
     session_id = models.TextField(max_length=500, default='',)
     first_income_date = models.DateTimeField(auto_now=True)
     last_income_date = models.DateTimeField(auto_now=True)
-    location_info = models.ForeignKey(to='Geolocation', related_name='geolocation', on_delete=models.CASCADE, verbose_name='detail info')
+    location_info = models.ForeignKey(to='Geolocation', related_name='geolocation', on_delete=models.CASCADE,
+                                      verbose_name='detail info')
+    visit_path = models.ForeignKey(to='VisitRouter', related_name='visitrouter', on_delete=models.CASCADE)
 
 
 class VisitRouter(models.Model):
     """
     记录用户访问路径
     """
-    pass
+    path = models.TextField(max_length=500)
+    visit_date = models.DateTimeField(auto_now=True)
