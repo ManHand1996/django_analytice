@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-)+uoviu6m$)k7fu)&z8_ncc&t#q0w$lwfqw6yt)-m4bau1-5r)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -45,6 +45,8 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'geolocation.middleware.MultipleProxyMiddleware',
+    'geolocation.middleware.UserinfoMiddelware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -135,3 +137,7 @@ MAXMIND_LICENSE = 'hj9vWU89SrurhZYA'
 # SkMqbajET3wL
 # hj9vWU89SrurhZYA
 # geoip2.webservice.Client(620139, 'hj9vWU89SrurhZYA',host='geolite.info') as client:
+
+GEO_URLPATTERNS = [
+
+]

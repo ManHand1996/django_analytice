@@ -6,6 +6,10 @@ name = "pypi"
 [packages]
 django = "*"
 geoip2 = "*"
+uwsgi = "*"
+ipy = "*"
+django-uwsgi-spooler = "*"
+django-uwsgi = "*"
 
 [dev-packages]
 

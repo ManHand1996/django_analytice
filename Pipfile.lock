@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "3a94715ee50c2a17592d9c7526d0f069878aca8838bf7f2d2c79e60a9e38d51c"
+            "sha256": "109d1b31d9c51bc5bd9ff995a513dd315c5502a73cc7a7ca875459d5bdd67aee"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -100,11 +100,11 @@
         },
         "charset-normalizer": {
             "hashes": [
-                "sha256:5d209c0a931f215cee683b6445e2d77677e7e75e159f78def0db09d68fafcaa6",
-                "sha256:5ec46d183433dcbd0ab716f2d7f29d8dee50505b3fdb40c6b985c7c4f5a3591f"
+                "sha256:e019de665e2bcf9c2b64e2e5aa025fa991da8720daa3c1138cadd2fd1856aed0",
+                "sha256:f7af805c321bfa1ce6714c51f254e0d5bb5e5834039bc17db7ebe3a4cec9492b"
             ],
             "markers": "python_version >= '3'",
-            "version": "==2.0.6"
+            "version": "==2.0.7"
         },
         "django": {
             "hashes": [
@@ -113,6 +113,21 @@
             ],
             "index": "pypi",
             "version": "==3.2.8"
+        },
+        "django-uwsgi": {
+            "hashes": [
+                "sha256:921fb5547e1c5edc740019ba65e0f066448f99730f4194c4ba736b40333de23f",
+                "sha256:eadbc34f5c4e3bd54b65717bc91411501327f3a94dd2607e587d7e5aeb5dda3c"
+            ],
+            "index": "pypi",
+            "version": "==0.2.2"
+        },
+        "django-uwsgi-spooler": {
+            "hashes": [
+                "sha256:eecb7533027dcb963cc7cca3566d9bc33218e431a755c05a9c89d88bd3d94152"
+            ],
+            "index": "pypi",
+            "version": "==0.0.0"
         },
         "geoip2": {
             "hashes": [
@@ -124,11 +139,18 @@
         },
         "idna": {
             "hashes": [
-                "sha256:14475042e284991034cb48e06f6851428fb14c4dc953acd9be9a5e95c7b6dd7a",
-                "sha256:467fbad99067910785144ce333826c71fb0e63a425657295239737f7ecd125f3"
+                "sha256:84d9dd047ffa80596e0f246e2eab0b391788b0503584e8945f2368256d2735ff",
+                "sha256:9d643ff0a55b762d5cdb124b8eaa99c66322e2157b69160bc32796e824360e6d"
             ],
             "markers": "python_version >= '3'",
-            "version": "==3.2"
+            "version": "==3.3"
+        },
+        "ipy": {
+            "hashes": [
+                "sha256:edeca741dea2d54aca568fa23740288c3fe86c0f3ea700344571e9ef14a7cc1a"
+            ],
+            "index": "pypi",
+            "version": "==1.1"
         },
         "maxminddb": {
             "hashes": [
@@ -253,6 +275,13 @@
             ],
             "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4' and python_version < '4'",
             "version": "==1.26.7"
+        },
+        "uwsgi": {
+            "hashes": [
+                "sha256:88ab9867d8973d8ae84719cf233b7dafc54326fcaec89683c3f9f77c002cdff9"
+            ],
+            "index": "pypi",
+            "version": "==2.0.20"
         },
         "yarl": {
             "hashes": [
