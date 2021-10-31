@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
-
+import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -46,7 +46,6 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'geolocation.middleware.MultipleProxyMiddleware',
-    'geolocation.middleware.UserinfoMiddelware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -57,7 +56,7 @@ ROOT_URLCONF = 'django_analytice.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
+        'DIRS': [os.path.join(BASE_DIR,'templates')]
         ,
         'APP_DIRS': True,
         'OPTIONS': {
@@ -137,6 +136,7 @@ MAXMIND_LICENSE = 'hj9vWU89SrurhZYA'
 # SkMqbajET3wL
 # hj9vWU89SrurhZYA
 # geoip2.webservice.Client(620139, 'hj9vWU89SrurhZYA',host='geolite.info') as client:
+
 
 GEO_URLPATTERNS = [
 
