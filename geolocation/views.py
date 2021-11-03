@@ -3,13 +3,14 @@ import itertools
 from django.shortcuts import render,HttpResponse
 from django.urls import resolve
 from .decorators import makeuserinfo
-from jinja2 import Environment, FileSystemLoader
-from pyecharts.globals import CurrentConfig
-# CurrentConfig.GLOBAL_ENV = Environment(loader=FileSystemLoader('../geolocation/templates'))
+from pyecharts.globals import ChartType, SymbolType,ThemeType
 from pyecharts import options as opts
-from pyecharts.charts import Line
+
+from pyecharts.charts import Line, Map
 from .models import SiteVisitor,VisitRouter,Geolocation
 # Create your views here.
+
+init_opt1 = opts.InitOpts(width="100%",height="800px", theme=ThemeType.CHALK)
 
 @makeuserinfo
 def index(request):
@@ -30,6 +31,12 @@ def articles(request, *args, **kwargs):
 
 
 def user_access_charts(request):
+
+    """
+    折线图： 显示近七天访客访问次数
+    :param request:
+    :return:
+    """
     query_set = SiteVisitor.objects.filter(session_uuid__isnull=False).values('last_income_date')
     group_set = itertools.groupby(query_set, lambda d : d.get('last_income_date').strftime('%Y-%m-%d'))
     axis_x = []
@@ -37,18 +44,40 @@ def user_access_charts(request):
     for day, this_day in group_set:
         axis_x.append(day)
         axis_y.append(len(list(this_day)))
-    axis_y.append(100)
+
     chart = (
-        Line()
+        Line(init_opts=init_opt1)
             .add_xaxis(axis_x)
             .add_yaxis('access_date', axis_y)
-            .set_global_opts(title_opts=opts.TitleOpts(title="用户访问统计", subtitle="每天"))
+            .set_global_opts(title_opts=opts.TitleOpts(title="用户访问统计", subtitle="近7天"),)
     )
+
     return HttpResponse(chart.render_embed())
 
 
-def geolocation_charts():
-    pass
+def geolocation_charts(request):
+    """
+    MAP 用户访问位置GEO地图
+    :param request:
+    :return:
+    """
+    c = (
+        Map(init_opts=init_opt1)
+
+            .add(
+            "用户访问位置GEO地图",
+            [('深圳',120)],
+            "china-cities",
+            label_opts=opts.LabelOpts(is_show=True),
+        )
+            .set_global_opts(
+            title_opts=opts.TitleOpts(title="Map-中国地图（带城市）"),
+            visualmap_opts=opts.VisualMapOpts(textstyle_opts=opts.TextStyleOpts(color="white")),
+
+        )
+
+    )
+    return HttpResponse(c.render_embed())
 
 
 def path_access_charts():

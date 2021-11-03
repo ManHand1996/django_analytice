@@ -3,7 +3,7 @@ from functools import wraps
 from .spooler import save_location_info
 import uuid
 import datetime
-from pytz import timezone
+from django.utils import timezone
 from django.http import Http404
 from django.conf import settings
 from django.urls import resolve
@@ -34,7 +34,7 @@ def makeuserinfo(func):
             request.session['session_uuid'] = uuid.uuid3(uuid.NAMESPACE_DNS, 'user').__str__()
 
         seesion_uuid = request.session.get('session_uuid')
-        visit_time = datetime.datetime.now(tz=timezone('Asia/Shanghai'))
+        visit_time = datetime.datetime.now()
 
         # 指定URL
         if request.method == 'GET':

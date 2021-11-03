@@ -29,6 +29,8 @@ def trans_to_location(userinfo):
             userinfo['city'] = response.city.name 
             userinfo['country'] = response.city.name
             userinfo['subdivision'] = response.city.name
+            userinfo['longtitude'] = response.location.longtitude
+            userinfo['latitude'] = response.location.latitude
     except Exception as e:
         pass
     save_info(userinfo)
@@ -56,6 +58,8 @@ def save_info(info_dict):
     path = info_dict['path']
     user_agent = info_dict['user_agent']
     visit_date = info_dict['visit_date']
+    longtitude = info_dict['longtitude']
+    latitude = info_dict['latitude']
 
     # 多对一关系
     # 指定主键 则根据主键判断对象是否存在：
@@ -64,7 +68,9 @@ def save_info(info_dict):
     location, created = Geolocation.objects.update_or_create(defaults={'user_agent': user_agent,
                                                                        'geo_country': country,
                                                                        'geo_city': city,
-                                                                       'geo_subdivision': subdivision
+                                                                       'geo_subdivision': subdivision,
+                                                                       'longtitude': longtitude,
+                                                                       'latitude': latitude
                                                                        },
                                                              ip=ip_addr)
 

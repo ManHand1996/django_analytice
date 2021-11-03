@@ -11,13 +11,16 @@ class Geolocation(models.Model):
     国家
     省份
     城市
+    经度
+    纬度
     """
     user_agent = models.TextField(max_length=100, default='')
-    ip = models.TextField(max_length=100, default='', primary_key=True)
-    geo_country = models.TextField(max_length=100, default='')
-    # 省份
-    geo_subdivision = models.TextField(max_length=100, default='')
-    geo_city = models.TextField(max_length=100, default='')
+    ip = models.TextField(max_length=100, default='', primary_key=True, verbose_name='IP地址')
+    geo_country = models.TextField(max_length=100, default='' , verbose_name='国家')
+    geo_subdivision = models.TextField(max_length=100, default='', verbose_name='省份')
+    geo_city = models.TextField(max_length=100, default='', verbose_name='城市')
+    longtitude = models.DecimalField(max_digits=15, default=0, decimal_places=6, verbose_name='经度')
+    latitude = models.DecimalField(max_digits=15, default=0,  decimal_places=6, verbose_name='纬度')
 
 
 class VisitRouter(models.Model):
