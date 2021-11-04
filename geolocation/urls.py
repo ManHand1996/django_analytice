@@ -8,5 +8,6 @@ urlpatterns = [
     path('index', views.index, name='index'),
     path('user_access', views.user_access_charts, name='user_access'),
     path('geolocation_charts', views.geolocation_charts, name='geolocation_charts'),
+    path('path_access_charts', views.path_access_charts, name='path_access_charts'),
     re_path(r'^articles/(?P<year>[0-9]{4})/$', views.articles, name='articles'),
 ]
