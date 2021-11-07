@@ -11,8 +11,10 @@ ipy = "*"
 django-uwsgi-spooler = "*"
 django-uwsgi = "*"
 pyecharts = "*"
+setuptools = "*"
 
 [dev-packages]
+
 
 [requires]
 python_version = "3.9"
