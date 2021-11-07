@@ -1,5 +1,6 @@
 from django.db import models
-import geoip2
+from django.conf import settings
+import pytz,datetime
 # Create your models here.
 
 
@@ -28,7 +29,7 @@ class VisitRouter(models.Model):
     记录用户访问路径
     """
     path = models.TextField(max_length=500)
-    visit_date = models.DateTimeField(auto_now=True)
+    visit_date = models.DateTimeField(default=datetime.datetime.now())
 
 
 class SiteVisitor(models.Model):
@@ -39,8 +40,8 @@ class SiteVisitor(models.Model):
     最后一次访问时间
     """
     session_uuid = models.TextField(max_length=500, default='', )
-    first_income_date = models.DateTimeField(auto_now=True)
-    last_income_date = models.DateTimeField(auto_now=True)
+    first_income_date = models.DateTimeField(default=datetime.datetime.now())
+    last_income_date = models.DateTimeField(default=datetime.datetime.now())
     location_info = models.ForeignKey(to='Geolocation', related_name='geolocation', on_delete=models.CASCADE,
                                       verbose_name='detail info')
     visit_path = models.ManyToManyField(VisitRouter, related_name='visitrouter')

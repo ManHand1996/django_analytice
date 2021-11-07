@@ -1,15 +1,10 @@
 # -*-coding:utf-8-*-
 from functools import wraps
-from .spooler import save_location_info
 import uuid
-import datetime
-from django.utils import timezone
+import datetime,pytz
 from django.http import Http404
+from geolocation.spooler import save_location_info
 from django.conf import settings
-from django.urls import resolve
-from django.views.decorators.http import require_http_methods
-
-
 def makeuserinfo(func):
     """
        get user request info
@@ -34,7 +29,7 @@ def makeuserinfo(func):
             request.session['session_uuid'] = uuid.uuid3(uuid.NAMESPACE_DNS, 'user').__str__()
 
         seesion_uuid = request.session.get('session_uuid')
-        visit_time = datetime.datetime.now()
+        visit_time = datetime.datetime.now(tz=pytz.timezone(settings.TIME_ZONE))
 
         # 指定URL
         if request.method == 'GET':

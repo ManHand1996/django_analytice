@@ -1,13 +1,10 @@
 # -*-coding:utf-8-*-
-from django.urls import path,include,re_path
-from . import views
+from django.urls import re_path
+from geolocation import views
 
 urlpatterns = [
+    re_path(r'^user_access_charts/$', views.user_access_charts, name='user_access_charts'),
+    re_path(r'^geolocation_charts/$', views.geolocation_charts, name='geolocation_charts'),
+    re_path(r'^path_access_charts/$', views.path_access_charts, name='path_access_charts'),
 
-    path('', views.index, name='index'),
-    path('index', views.index, name='index'),
-    path('user_access', views.user_access_charts, name='user_access'),
-    path('geolocation_charts', views.geolocation_charts, name='geolocation_charts'),
-    path('path_access_charts', views.path_access_charts, name='path_access_charts'),
-    re_path(r'^articles/(?P<year>[0-9]{4})/$', views.articles, name='articles'),
 ]

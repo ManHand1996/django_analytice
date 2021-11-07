@@ -1,35 +1,18 @@
 import itertools
-
 from django.shortcuts import render,HttpResponse
-from django.urls import resolve
-from .decorators import makeuserinfo
+
 from pyecharts.globals import ChartType, SymbolType,ThemeType
 
 from pyecharts import options as opts
 
 from pyecharts.charts import Line, Map,Bar
-from .models import SiteVisitor,VisitRouter,Geolocation
-import datetime
+from geolocation.models import SiteVisitor,VisitRouter,Geolocation
+import datetime, pytz
 from django.db.models import Count
+from django.conf import settings
 # Create your views here.
 
 init_opt1 = opts.InitOpts(width="100%",height="800px", theme=ThemeType.CHALK)
-
-@makeuserinfo
-def index(request):
-    # request.session['session_uuid'] = uuid.uuid3(uuid.NAMESPACE_DNS, 'user').__str__()
-    # request.session['ff'] = 'index'
-    # rq = request.session.get('session_uuid')
-    # remote_addr = request.META.get('REMOTE_ADDR').__str__()
-    # http_host = request.META.get('HTTP_HOST ').__str__()
-    # http_host = request.get_host().__str__()
-    # user_agent = request.headers['User-Agent'].__str__()
-
-    return HttpResponse('hello world' )
-
-def articles(request, *args, **kwargs):
-    f = resolve(request.path)
-    return HttpResponse('fff' + f.route.__str__())
 
 
 def user_access_charts(request):
@@ -39,9 +22,11 @@ def user_access_charts(request):
     :param request:
     :return:
     """
+    # SQLite 查询日期设置 settings.USE_TZ = False, 查询的时间也不要设置时区，默认使用系统时间，这样查询才正确
     dnow = datetime.datetime.now()
-    start_date = datetime.datetime(dnow.year,dnow.month,dnow.day,0,0,0) + datetime.timedelta(days=-7)
-    end_date = datetime.datetime(dnow.year,dnow.month,dnow.day,0,0,0)
+    start_date = dnow - datetime.timedelta(days=7)
+    end_date = dnow
+
     query_set = SiteVisitor.objects.filter(session_uuid__isnull=False,last_income_date__range=(start_date,end_date))\
         .values('last_income_date')
     group_set = itertools.groupby(query_set, lambda d : d.get('last_income_date').strftime('%Y-%m-%d'))
@@ -53,8 +38,8 @@ def user_access_charts(request):
 
     chart = (
         Line(init_opts=init_opt1)
-            .add_xaxis('访问次数', axis_x)
-            .add_yaxis('日期', axis_y)
+            .add_xaxis(axis_x)
+            .add_yaxis('访问次数', axis_y)
             .set_global_opts(title_opts=opts.TitleOpts(title="用户访问统计", subtitle="近7天"),)
     )
 

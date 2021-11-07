@@ -3,7 +3,7 @@ import datetime
 from geoip2 import webservice
 from django.conf import settings
 import IPy
-from .models import VisitRouter, SiteVisitor, Geolocation
+from geolocation.models import VisitRouter, SiteVisitor, Geolocation
 
 
 def trans_to_location(userinfo):
@@ -19,6 +19,8 @@ def trans_to_location(userinfo):
     userinfo['city'] = ''
     userinfo['country'] = ''
     userinfo['subdivision'] = ''
+    userinfo['longtitude'] = 0
+    userinfo['latitude'] = 0
     userinfo['visit_date'] = datetime.datetime.strptime(userinfo['visit_date'], '%Y-%m-%d %H:%M:%S')
     try:
         IPy.IP(ip_addr)
