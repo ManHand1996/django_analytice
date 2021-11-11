@@ -1,6 +1,5 @@
 from django.db import models
-from django.conf import settings
-import pytz,datetime
+from django.utils import timezone
 # Create your models here.
 
 
@@ -29,8 +28,10 @@ class VisitRouter(models.Model):
     记录用户访问路径
     """
     path = models.TextField(max_length=500)
-    visit_date = models.DateTimeField(default=datetime.datetime.now())
+    visit_date = models.DateTimeField(default=timezone.now())
 
+    def __str__(self):
+        return self.path
 
 class SiteVisitor(models.Model):
     """
@@ -40,10 +41,10 @@ class SiteVisitor(models.Model):
     最后一次访问时间
     """
     session_uuid = models.TextField(max_length=500, default='', )
-    first_income_date = models.DateTimeField(default=datetime.datetime.now())
-    last_income_date = models.DateTimeField(default=datetime.datetime.now())
+    first_income_date = models.DateTimeField(default=timezone.now())
+    last_income_date = models.DateTimeField(default=timezone.now())
     location_info = models.ForeignKey(to='Geolocation', related_name='geolocation', on_delete=models.CASCADE,
                                       verbose_name='detail info')
-    visit_path = models.ManyToManyField(VisitRouter, related_name='visitrouter')
+    visit_path = models.ManyToManyField(VisitRouter, related_name='visitrouter', on_delete=models.CASCADE)
 
 

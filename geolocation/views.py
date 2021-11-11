@@ -1,6 +1,7 @@
 import itertools
 from django.shortcuts import render,HttpResponse
 
+
 from pyecharts.globals import ChartType, SymbolType,ThemeType
 
 from pyecharts import options as opts

@@ -1,10 +1,9 @@
 # -*-coding:utf-8-*-
 from functools import wraps
 import uuid
-import datetime,pytz
 from django.http import Http404
 from geolocation.spooler import save_location_info
-from django.conf import settings
+from django.utils import timezone
 def makeuserinfo(func):
     """
        get user request info
@@ -19,7 +18,7 @@ def makeuserinfo(func):
         ]
         remote_tag = list(set(FORWARDED_FOR_FIELDS).intersection(request.META))
         if remote_tag.__len__() > 0:
-            return request.get_host().__str__()
+            return request.META['HTTP_X_FORWARDED_FOR']
         else:
             return request.META.get('REMOTE_ADDR').__str__()
 
@@ -28,12 +27,13 @@ def makeuserinfo(func):
         if not request.session.get('session_uuid'):
             request.session['session_uuid'] = uuid.uuid3(uuid.NAMESPACE_DNS, 'user').__str__()
 
-        seesion_uuid = request.session.get('session_uuid')
-        visit_time = datetime.datetime.now(tz=pytz.timezone(settings.TIME_ZONE))
-
+        seesion_uuid = request.session.session_key
+        # visit_time = datetime.datetime.now(tz=pytz.timezone(settings.TIME_ZONE))
+        visit_time = timezone.now()
+        client_ip = get_addr(request)
         # 指定URL
         if request.method == 'GET':
-            save_location_info.spool({b'ip': bytes(get_addr(request), encoding='utf8'),
+            save_location_info.spool({b'ip': bytes(client_ip, encoding='utf8'),
                                       b'user_agent': bytes(request.headers['User-Agent'].__str__(),
                                                            encoding='utf8'),
                                       b'path': bytes(request.path, encoding='utf8'),

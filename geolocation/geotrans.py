@@ -1,5 +1,6 @@
 import datetime
 
+import pytz
 from geoip2 import webservice
 from django.conf import settings
 import IPy
@@ -21,18 +22,30 @@ def trans_to_location(userinfo):
     userinfo['subdivision'] = ''
     userinfo['longtitude'] = 0
     userinfo['latitude'] = 0
-    userinfo['visit_date'] = datetime.datetime.strptime(userinfo['visit_date'], '%Y-%m-%d %H:%M:%S')
+    #userinfo['visit_date'] = datetime.datetime.strptime(userinfo['visit_date'], '%Y-%m-%d %H:%M:%S')
+    d_date = datetime.datetime.strptime(userinfo['visit_date'], '%Y-%m-%d %H:%M:%S')
+    userinfo['visit_date'] = d_date.replace(tzinfo=pytz.timezone(settings.TIME_ZONE)) if settings.USE_TZ else d_date
     try:
         IPy.IP(ip_addr)
-        # get ip info from geolite.info
-        with webservice.AsyncClient(settings.MAXMIND_ACCOUNT, settings.MAXMIND_LICENSE, host='geolite.info', locales=['zh-CN','en']) as client:
-            response = client.city(ip_addr)
+        r = Geolocation.objects.filter(ip=ip_addr)
 
-            userinfo['city'] = response.city.name 
-            userinfo['country'] = response.city.name
-            userinfo['subdivision'] = response.city.name
-            userinfo['longtitude'] = response.location.longtitude
-            userinfo['latitude'] = response.location.latitude
+        if len(r) == 0:
+            # get ip info from geolite.info
+            with webservice.Client(settings.MAXMIND_ACCOUNT, settings.MAXMIND_LICENSE, host='geolite.info', locales=['zh-CN','en']) as client:
+                response = client.city(ip_addr)
+
+                userinfo['city'] = response.city.name
+                userinfo['country'] = response.country.name
+                userinfo['subdivision'] = response.subdivisions[0].name
+                userinfo['longtitude'] = response.location.longtitude
+                userinfo['latitude'] = response.location.latitude
+        else:
+            userinfo['city'] = r[0].city
+            userinfo['country'] = r[0].country
+            userinfo['subdivision'] = r[0].subdivision
+            userinfo['longtitude'] = r[0].longtitube
+            userinfo['latitude'] = r[0].latitube
+
     except Exception as e:
         pass
     save_info(userinfo)
