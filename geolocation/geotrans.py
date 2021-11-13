@@ -29,7 +29,7 @@ def trans_to_location(userinfo):
         IPy.IP(ip_addr)
         r = Geolocation.objects.filter(ip=ip_addr)
 
-        if len(r) == 0:
+        if len(r) == 0 or r[0].geo_city == '':
             # get ip info from geolite.info
             with webservice.Client(settings.MAXMIND_ACCOUNT, settings.MAXMIND_LICENSE, host='geolite.info', locales=['zh-CN','en']) as client:
                 response = client.city(ip_addr)
@@ -76,6 +76,13 @@ def save_info(info_dict):
     longtitude = info_dict['longtitude']
     latitude = info_dict['latitude']
 
+    # update_or_craete(defaults={},*kwargs)
+    # defaults={} 更新列
+    visitor, visitor_created = SiteVisitor.objects.update_or_create(defaults={'last_income_date': visit_date,
+                                                                      },
+                                                            session_uuid=session_uuid)
+
+
     # 多对一关系
     # 指定主键 则根据主键判断对象是否存在：
     # 存在：更新
@@ -85,24 +92,26 @@ def save_info(info_dict):
                                                                        'geo_city': city,
                                                                        'geo_subdivision': subdivision,
                                                                        'longtitude': longtitude,
-                                                                       'latitude': latitude
+                                                                       'latitude': latitude,
+                                                                       'visitor': visitor,
                                                                        },
-                                                             ip=ip_addr)
+                                                             ip=ip_addr, visitor=visitor)
 
-    # update_or_craete(defaults={},*kwargs)
-    # defaults={} 更新列
-    visitor, created = SiteVisitor.objects.update_or_create(defaults={'last_income_date': visit_date,
-                                                                      'location_info':location},
-                                                            session_uuid=session_uuid)
-    if created:
-        router = VisitRouter.objects.create(path=path)
-        visitor.visit_path.add(router)
-        # visitor.location_info.update(location)
-    else:
-        visitor.visit_path.update_or_create(defaults={'visit_date': visit_date}, path=path)
-        # 判断用户的同一天访问记录是否存在 不存在就添加，存在则更新
-        # visitor.update(last_income_date)
-        # visitor.visit_path.add() 同一用户同一天访问同一个路径只算一次（同一天只更新一次）
+    VisitRouter.objects.update_or_create(defaults={
+        'path': path,
+        'visit_date': visit_date,
+        'visitor': visitor,
+    }, path=path, visitor=visitor)
+
+    # if visitor_created:
+    #     router = VisitRouter.objects.create(path=path)
+    #     visitor.visit_path.add(router)
+    #     # visitor.location_info.update(location)
+    # else:
+    #     visitor.visit_path.update_or_create(defaults={'visit_date': visit_date}, path=path)
+    #     # 判断用户的同一天访问记录是否存在 不存在就添加，存在则更新
+    #     # visitor.update(last_income_date)
+    #     # visitor.visit_path.add() 同一用户同一天访问同一个路径只算一次（同一天只更新一次）
 
 
 

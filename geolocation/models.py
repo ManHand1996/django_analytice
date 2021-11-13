@@ -13,6 +13,7 @@ class Geolocation(models.Model):
     城市
     经度
     纬度
+    同一IP 可能有多个用户访问
     """
     user_agent = models.TextField(max_length=100, default='')
     ip = models.TextField(max_length=100, default='', primary_key=True, verbose_name='IP地址')
@@ -21,6 +22,10 @@ class Geolocation(models.Model):
     geo_city = models.TextField(max_length=100, default='', verbose_name='城市')
     longtitude = models.DecimalField(max_digits=15, default=0, decimal_places=6, verbose_name='经度')
     latitude = models.DecimalField(max_digits=15, default=0,  decimal_places=6, verbose_name='纬度')
+    visitor = models.ForeignKey(to='SiteVisitor', related_name='geo_visitor', on_delete=models.CASCADE, blank=True,null=True)
+
+    def __str__(self):
+        return self.geo_country + self.geo_subdivision + self.geo_city
 
 
 class VisitRouter(models.Model):
@@ -29,9 +34,11 @@ class VisitRouter(models.Model):
     """
     path = models.TextField(max_length=500)
     visit_date = models.DateTimeField(default=timezone.now())
+    visitor = models.ForeignKey(to='SiteVisitor', related_name='router_visitor', on_delete=models.CASCADE, blank=True,null=True)
 
     def __str__(self):
         return self.path
+
 
 class SiteVisitor(models.Model):
     """
@@ -43,8 +50,8 @@ class SiteVisitor(models.Model):
     session_uuid = models.TextField(max_length=500, default='', )
     first_income_date = models.DateTimeField(default=timezone.now())
     last_income_date = models.DateTimeField(default=timezone.now())
-    location_info = models.ForeignKey(to='Geolocation', related_name='geolocation', on_delete=models.CASCADE,
-                                      verbose_name='detail info')
-    visit_path = models.ManyToManyField(VisitRouter, related_name='visitrouter', on_delete=models.CASCADE)
+    # location_info = models.ForeignKey(to='Geolocation', related_name='geolocation', on_delete=models.CASCADE)
+    #                                   verbose_name='detail info')
+    # visit_path = models.ManyToManyField(VisitRouter, related_name='visitrouter')
 
 
